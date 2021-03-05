@@ -7,7 +7,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"log"
 )
-
+var db *sql.DB
 func InitMysql() {
 
 	fmt.Println("InitMysql....")
@@ -19,17 +19,17 @@ func InitMysql() {
 	//数据库连接
 	user := beego.AppConfig.String("root")
 	pwd := beego.AppConfig.String("123456")
-	host := beego.AppConfig.String("host")
-	port := beego.AppConfig.String("port")
-	dbname := beego.AppConfig.String("dbname")
+	host := beego.AppConfig.String("127.0.0.1")
+	port := beego.AppConfig.String("3306")
+	dbname := beego.AppConfig.String("myblog")
 
 	//dbConn := "root:yu271400@tcp(127.0.0.1:3306)/cmsproject?charset=utf8"
 	dbConn := user + ":" + pwd + "@tcp(" + host + ":" + port + ")/" + dbname + "?charset=utf8"
 
-	db, _ = sql.Open(driverName, dbConn)
+	db, _= sql.Open(driverName, dbConn)
 }
 	//创建用户表
-	func CreateTableWithUser() {
+	func CreateTableWithUser(){
 		sql := `CREATE TABLE IF NOT EXISTS users(
 		id INT(4) PRIMARY KEY AUTO_INCREMENT NOT NULL,
 		username VARCHAR(64),
@@ -40,20 +40,21 @@ func InitMysql() {
 
 		ModifyDB(sql)
 	}
-	func ModifyDB(sql string, args ...interface{}) (int64, error) {
-		result, err := db.Exec(sql, args...)
-		if err != nil {
-			log.Println(err)
-			return 0, err
-		}
-		count, err := result.RowsAffected()
-		if err != nil {
-			log.Println(err)
-			return 0, err
-		}
-		return count, nil
-		}
+func ModifyDB(sql string, args ...interface{}) (int64, error) {
+	result, err := db.Exec(sql, args...)
+	if err != nil {
+		log.Println(err)
+		return 0, err
+	}
+	count, err := result.RowsAffected()
+	if err != nil {
+		log.Println(err)
+		return 0, err
+	}
+	return count, nil
+}
 //查询
 func QueryRowDB(sql string) *sql.Row{
 	return db.QueryRow(sql)
 }
+

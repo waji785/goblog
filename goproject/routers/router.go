@@ -9,6 +9,13 @@ import (
 	"time"
 )
 
+type RegisterController struct {
+	beego.Controller
+}
+
+func (this *RegisterController) Get(){
+	this.TplName = "register.html"
+}
 func init() {
 	beego.Router("/", &controllers.MainController{})
 	beego.Router("/register", &controllers.RegisterController{})
